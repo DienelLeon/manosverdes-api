@@ -124,3 +124,10 @@ exports.materialInfoUpsert = async (material_id, b) => {
 };
 
 exports.materialInfoList = async () => dao.materialInfoList();
+
+exports.materialInfoDelete = async (material_id) => {
+  material_id = toId(material_id, 'material_id');
+  const affected = await dao.materialInfoDelete(material_id);
+  if (affected < 1) throw new HttpError(404, 'Material info no encontrada');
+  return { affected };
+};

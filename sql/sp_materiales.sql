@@ -186,4 +186,11 @@ BEGIN
   ORDER BY m.nombre;
 END;//
 
+DROP PROCEDURE IF EXISTS sp_admin_material_info_delete;//
+CREATE PROCEDURE sp_admin_material_info_delete(IN p_material_id INT)
+BEGIN
+  DELETE FROM material_info WHERE material_id = p_material_id;
+  SELECT ROW_COUNT() AS affected;
+END;//
+
 DELIMITER ;

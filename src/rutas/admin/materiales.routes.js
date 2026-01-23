@@ -19,14 +19,18 @@ r.post('/subcategorias', c.subcategoriaCreate);
 r.put('/subcategorias/:id', c.subcategoriaUpdate);
 r.delete('/subcategorias/:id', c.subcategoriaDelete);
 
+
 r.get('/', c.materialList);
 r.get('/info', c.materialInfoList);
+r.post('/info', c.materialInfoCreate);
+
+r.get('/info/:id', c.materialInfoGet);
+r.put('/info/:id', c.materialInfoUpsert);
+r.delete('/info/:id', c.materialInfoDelete);
+
 r.get('/:id', c.materialGet);
 r.post('/', c.materialCreate);
 r.put('/:id', c.materialUpdate);
 r.delete('/:id', c.materialDelete);
-
-r.get('/:id/info', c.materialInfoGet);
-r.put('/:id/info', c.materialInfoUpsert);
 
 module.exports = r;

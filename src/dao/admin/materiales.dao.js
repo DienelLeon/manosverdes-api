@@ -84,3 +84,8 @@ exports.materialInfoUpsert = async (material_id, info) => {
 };
 
 exports.materialInfoList = async () => pickTable(await db.query('CALL sp_admin_material_info_list()'));
+
+exports.materialInfoDelete = async (material_id) => {
+  const row = pickFirstRow(await db.query('CALL sp_admin_material_info_delete(?)', [material_id]));
+  return Number(row?.affected || 0);
+};

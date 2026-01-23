@@ -89,6 +89,18 @@ exports.materialInfoUpsert = async (req, res, next) => {
   } catch(e){ next(e); }
 };
 
+exports.materialInfoCreate = async (req, res, next) => {
+  try {
+    const material_id = req.body?.material_id;
+    const out = await s.materialInfoUpsert(material_id, req.body || {});
+    res.status(201).json({ ok: true, ...out });
+  } catch (e) { next(e); }
+};
+
 exports.materialInfoList = async (_req, res, next) => {
   try { res.json({ ok: true, items: await s.materialInfoList() }); } catch(e) { next(e); }
+};
+
+exports.materialInfoDelete = async (req, res, next) => {
+  try { res.json({ ok: true, ...(await s.materialInfoDelete(req.params.id)) }); } catch(e) { next(e); }
 };
