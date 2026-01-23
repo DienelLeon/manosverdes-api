@@ -27,7 +27,7 @@ exports.list = async (limit = 50, offset = 0, q = null) => {
   params.push(Number(limit) || 50, Number(offset) || 0);
   const sql = `SELECT c.id, c.nombre, c.direccion, c.distrito_id, d.nombre AS distrito_nombre, c.tipo_id, ct.nombre AS tipo_nombre, c.telefono, c.horario, c.estado, c.lat, c.lng,
     CONCAT(u.nombre,' ',u.apellido_paterno,' ',IFNULL(u.apellido_materno,'')) AS usuario_nombre,
-    cr.ruc AS representante_ruc, cr.contacto_tel AS representante_tel, cr.contacto_nombre AS representante_nombre
+    cr.ruc AS representante_ruc, cr.razon_social AS representante_razon_social, cr.contacto_nombre AS representante_nombre, cr.contacto_tel AS representante_tel, cr.contacto_email AS representante_email
     FROM centro c
     LEFT JOIN centro_tipo ct ON ct.id = c.tipo_id
     LEFT JOIN usuario u ON u.id = c.usuario_id

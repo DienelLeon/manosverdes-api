@@ -86,6 +86,10 @@ async function provinciaDelete(id) {
 
 /* DISTRITO */
 async function distritoList(provincia_id) {
+  // provincia_id es opcional: si no se pasa, listamos todos (pasamos NULL al DAO)
+  if (provincia_id == null || provincia_id === '') {
+    return dao.distritoList(null);
+  }
   provincia_id = toId(provincia_id, 'provincia_id');
   return dao.distritoList(provincia_id);
 }

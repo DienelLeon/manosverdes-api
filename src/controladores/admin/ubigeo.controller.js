@@ -93,7 +93,7 @@ exports.provinciaDelete = async (req, res, next) => {
 exports.distritoList = async (req, res, next) => {
   try {
     const { provincia_id } = req.query || {};
-    if (!provincia_id) throw new HttpError(400, 'provincia_id requerido');
+    // permitir listar todos si no se pasa provincia_id
     const out = await s.distritoList(provincia_id);
     res.json({ ok: true, items: out });
   } catch (e) { next(e); }
