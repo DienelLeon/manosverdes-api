@@ -2,7 +2,8 @@
 
 Backend REST para Manos Verdes (Node.js + Express + MySQL).  
 Incluye autenticación JWT (whitelist con tabla `sesion`), envío de OTP por correo y subida de archivos a Google Cloud Storage.
-
+# LANZAR TODA BD
+mysql -u root -p < sql/combined.sql
 ## Tecnologías
 - Node.js + Express
 - MySQL (mysql2)
