@@ -51,8 +51,8 @@ exports.subcategoriaDelete = async (id) => {
 };
 
 /* MATERIAL */
-exports.materialList = async (subcategoria_id, activo, elegible) =>
-  pickTable(await db.query('CALL sp_admin_material_list(?,?,?)', [subcategoria_id, activo, elegible]));
+exports.materialList = async (subcategoria_id, activo, elegible, q) =>
+  pickTable(await db.query('CALL sp_admin_material_list(?,?,?,?)', [subcategoria_id, activo, elegible, q]));
 exports.materialGet = async (id) =>
   pickFirstRow(await db.query('CALL sp_admin_material_get(?)', [id]));
 exports.materialCreate = async (subcategoria_id, nombre, icono, elegible, activo) => {
@@ -82,3 +82,5 @@ exports.materialInfoUpsert = async (material_id, info) => {
   ]);
   return true;
 };
+
+exports.materialInfoList = async () => pickTable(await db.query('CALL sp_admin_material_info_list()'));

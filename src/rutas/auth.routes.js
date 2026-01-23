@@ -15,4 +15,7 @@ r.post('/password/reset', c.passwordReset);
 r.post('/login', c.login);
 r.post('/logout', auth, c.logout);
 
+// Obtener perfil del usuario autenticado
+r.get('/me', auth, c.me);
+
 module.exports = r;

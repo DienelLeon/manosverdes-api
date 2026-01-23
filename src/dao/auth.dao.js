@@ -15,6 +15,17 @@ async function obtenerUsuarioPorEmail(email) {
   return pickFirstRow(r);
 }
 
+async function obtenerUsuarioPorId(id) {
+  const q = `SELECT u.id, u.nombre, u.apellido_paterno, u.apellido_materno, u.email, u.telefono, u.avatar_key, u.estado, u.rol_id, r.clave AS rol_clave, ua.email_verificado
+    FROM usuario u
+    JOIN rol r ON r.id = u.rol_id
+    LEFT JOIN usuario_auth ua ON ua.usuario_id = u.id
+    WHERE u.id = ?
+    LIMIT 1`;
+  const r = await db.query(q, [id]);
+  return pickFirstRow(r);
+}
+
 async function crearUsuario(data) {
   const r = await db.query(
     'CALL sp_auth_usuario_crear(?,?,?,?,?,?,?,?,?)',
@@ -84,4 +95,5 @@ module.exports = {
   intentoFallido,
   otpUpsert,
   otpUsarSiValido,
+  obtenerUsuarioPorId,
 };

@@ -181,6 +181,34 @@ async function logout() {
   return { message: 'Sesión cerrada' };
 }
 
+async function me(userId) {
+  const u = await authDao.obtenerUsuarioPorId(userId);
+  if (!u) throw new HttpError(404, 'Usuario no encontrado');
+
+  const avatar_key = u.avatar_key;
+  let avatar_url = process.env.DEFAULT_AVATAR_URL || null;
+  if (avatar_key) {
+    if (/^https?:\/\//i.test(avatar_key)) avatar_url = avatar_key;
+    else if (process.env.GCS_PUBLIC_BASE) avatar_url = `${process.env.GCS_PUBLIC_BASE}/${avatar_key}`;
+    else avatar_url = avatar_key;
+  }
+
+  return {
+    id: u.id,
+    nombre: u.nombre,
+    apellido_paterno: u.apellido_paterno,
+    apellido_materno: u.apellido_materno,
+    email: u.email,
+    telefono: u.telefono || null,
+    avatar_url,
+    rol_id: Number(u.rol_id),
+    rol_clave: u.rol_clave,
+    rol: u.rol_clave,
+    estado: u.estado,
+    email_verificado: Number(u.email_verificado || 0),
+  };
+}
+
 module.exports = {
   register,
   verifySendEmail,
@@ -189,4 +217,5 @@ module.exports = {
   passwordReset,
   login,
   logout,
+  me,
 };

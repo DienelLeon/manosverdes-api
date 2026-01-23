@@ -69,6 +69,15 @@ async function logout(req, res, next) {
   } catch (e) { next(e); }
 }
 
+async function me(req, res, next) {
+  try {
+    const userId = req.user && req.user.id;
+    if (!userId) throw new HttpError(401, 'No autenticado');
+    const out = await authService.me(userId);
+    res.json({ ok: true, ...out });
+  } catch (e) { next(e); }
+}
+
 module.exports = {
   register,
   verifySendEmail,
@@ -77,4 +86,5 @@ module.exports = {
   passwordReset,
   login,
   logout,
+  me,
 };

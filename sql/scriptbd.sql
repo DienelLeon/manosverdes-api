@@ -232,3 +232,125 @@ CREATE TABLE material_info (
   contaminacion TEXT,
   FOREIGN KEY (material_id) REFERENCES material(id) ON DELETE CASCADE
 ) ENGINE=InnoDB;
+
+-- =========================
+-- DATOS DE PRUEBA
+-- =========================
+
+-- USUARIOS DE PRUEBA
+INSERT INTO usuario (nombre, apellido_paterno, apellido_materno, email, telefono, rol_id, estado) VALUES
+('Admin', 'Manos Verdes', NULL, 'admin@manosverdes.test', '987654321', 1, 'activo'),
+('Centro', 'Reciclaje', 'Lima', 'centro@manosverdes.test', '987654322', 2, 'activo'),
+('Juan', 'Pérez', 'García', 'usuario@manosverdes.test', '987654323', 3, 'activo');
+
+-- CREDENCIALES (Contraseña: Test123456 → Hash bcryptjs)
+INSERT INTO usuario_auth (usuario_id, password_hash, email_verificado, intentos_fallidos) VALUES
+(1, '$2b$10$DrqLB2cmR6LhkP5auGAXfu5M2ywvQT92F84e3YhZqSy7L7hEe1HD.', 1, 0),
+(2, '$2b$10$DrqLB2cmR6LhkP5auGAXfu5M2ywvQT92F84e3YhZqSy7L7hEe1HD.', 1, 0),
+(3, '$2b$10$DrqLB2cmR6LhkP5auGAXfu5M2ywvQT92F84e3YhZqSy7L7hEe1HD.', 1, 0);
+
+-- CATEGORÍAS DE MATERIALES
+INSERT INTO material_categoria (nombre, icono, activo) VALUES
+('Plásticos', 'plastic.png', 1),
+('Vidrio', 'glass.png', 1),
+('Papel y Cartón', 'paper.png', 1),
+('Metales', 'metal.png', 1),
+('Electrónicos', 'electronic.png', 1),
+('Peligrosos', 'danger.png', 1);
+
+-- SUBCATEGORÍAS DE PLÁSTICOS
+INSERT INTO material_subcategoria (categoria_id, nombre, activo) VALUES
+(1, 'PET (botellas)', 1),
+(1, 'HDPE (bolsas)', 1),
+(1, 'PVC', 1);
+
+-- SUBCATEGORÍAS DE VIDRIO
+INSERT INTO material_subcategoria (categoria_id, nombre, activo) VALUES
+(2, 'Botellas claras', 1),
+(2, 'Botellas verdes', 1),
+(2, 'Botellas marrones', 1);
+
+-- SUBCATEGORÍAS DE PAPEL
+INSERT INTO material_subcategoria (categoria_id, nombre, activo) VALUES
+(3, 'Periódicos', 1),
+(3, 'Cartón corrugado', 1),
+(3, 'Papel blanco', 1);
+
+-- SUBCATEGORÍAS DE METALES
+INSERT INTO material_subcategoria (categoria_id, nombre, activo) VALUES
+(4, 'Aluminio', 1),
+(4, 'Acero', 1),
+(4, 'Cobre', 1);
+
+-- SUBCATEGORÍAS PELIGROSOS
+INSERT INTO material_subcategoria (categoria_id, nombre, activo) VALUES
+(6, 'Residuos Quirúrgicos', 1),
+(6, 'Residuos Hospitalarios', 1),
+(6, 'Químicos Tóxicos', 1);
+
+-- MATERIALES - PLÁSTICOS
+INSERT INTO material (subcategoria_id, nombre, elegible, activo) VALUES
+(1, 'Botella PET transparente', 1, 1),
+(1, 'Botella PET de color', 1, 1),
+(2, 'Bolsa HDPE', 1, 1),
+(3, 'Tubería PVC', 1, 1);
+
+-- MATERIALES - VIDRIO
+INSERT INTO material (subcategoria_id, nombre, elegible, activo) VALUES
+(4, 'Botella clara', 1, 1),
+(4, 'Frasco transparente', 1, 1),
+(5, 'Botella verde', 1, 1),
+(6, 'Botella marrón', 1, 1);
+
+-- MATERIALES - PAPEL
+INSERT INTO material (subcategoria_id, nombre, elegible, activo) VALUES
+(7, 'Periódico', 1, 1),
+(8, 'Cartón de caja', 1, 1),
+(9, 'Papel de oficina', 1, 1);
+
+-- MATERIALES - METALES
+INSERT INTO material (subcategoria_id, nombre, elegible, activo) VALUES
+(10, 'Lata de aluminio', 1, 1),
+(10, 'Papel aluminio', 1, 1),
+(11, 'Tubo de acero', 1, 1),
+(12, 'Cable de cobre', 1, 1);
+
+-- MATERIALES PELIGROSOS (elegible=0 → NO se puede registrar para acopio)
+INSERT INTO material (subcategoria_id, nombre, elegible, activo) VALUES
+(13, 'Gasas quirúrgicas contaminadas', 0, 1),
+(13, 'Agujas y jeringas', 0, 1),
+(14, 'Sangre y fluidos corporales', 0, 1),
+(15, 'Ácido sulfúrico', 0, 1),
+(15, 'Pesticidas', 0, 1);
+
+-- DATOS GEOGRAFÍA PERÚ (EJEMPLO)
+INSERT INTO departamento (nombre) VALUES
+('Lima');
+
+INSERT INTO provincia (departamento_id, nombre) VALUES
+(1, 'Lima');
+
+INSERT INTO distrito (provincia_id, nombre) VALUES
+(1, 'Lima'),
+(1, 'Barranco'),
+(1, 'La Molina'),
+(1, 'Miraflores');
+
+-- CENTRO DE RECICLAJE
+INSERT INTO centro (usuario_id, nombre, direccion, distrito_id, tipo_id, telefono, estado) VALUES
+(2, 'Centro Eco Lima', 'Av. Principal 123, La Molina', 3, 1, '987654322', 'activo');
+
+-- REPRESENTANTE DEL CENTRO
+INSERT INTO centro_representante (centro_id, ruc, razon_social, contacto_nombre, contacto_cargo, contacto_tel, contacto_email) VALUES
+(1, '20123456789', 'Centro Ecológico Sostenible S.A.', 'María García López', 'Gerente', '987654322', 'contacto@centroeco.pe');
+
+-- PRECIOS DE MATERIALES EN EL CENTRO (Solo materiales elegibles)
+INSERT INTO centro_material_precio (centro_id, material_id, precio_kg, moneda) VALUES
+(1, 1, 2.50, 'PEN'),
+(1, 2, 2.30, 'PEN'),
+(1, 3, 1.80, 'PEN'),
+(1, 5, 0.50, 'PEN'),
+(1, 7, 2.00, 'PEN'),
+(1, 9, 1.50, 'PEN'),
+(1, 16, 8.00, 'PEN'),
+(1, 17, 3.50, 'PEN');

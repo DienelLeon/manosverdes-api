@@ -74,7 +74,8 @@ exports.materialList = async (q) => {
   const subcategoria_id = q.subcategoria_id ? toId(q.subcategoria_id, 'subcategoria_id') : null;
   const activo = q.activo === undefined ? null : toTiny(q.activo);
   const elegible = q.elegible === undefined ? null : toTiny(q.elegible);
-  return dao.materialList(subcategoria_id, activo, elegible);
+  const search = q.q ?? null;
+  return dao.materialList(subcategoria_id, activo, elegible, search);
 };
 exports.materialGet = async (id) => {
   id = toId(id);
@@ -121,3 +122,5 @@ exports.materialInfoUpsert = async (material_id, b) => {
   await dao.materialInfoUpsert(material_id, b || {});
   return { ok: true };
 };
+
+exports.materialInfoList = async () => dao.materialInfoList();
