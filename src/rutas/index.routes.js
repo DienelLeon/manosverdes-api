@@ -10,6 +10,8 @@ router.use('/auth', require('./auth.routes'));
 // Admin routes
 router.use('/admin/ubigeo', require('./admin/ubigeo.routes'));
 router.use('/admin/materiales', require('./admin/materiales.routes'));
+router.use('/admin/centros', require('./admin/centros.routes'));
+router.use('/admin/usuarios', require('./admin/usuarios.routes'));
 
 
 
