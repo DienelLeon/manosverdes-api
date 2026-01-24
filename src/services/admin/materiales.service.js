@@ -121,3 +121,13 @@ exports.materialInfoUpsert = async (material_id, b) => {
   await dao.materialInfoUpsert(material_id, b || {});
   return { ok: true };
 };
+
+
+
+exports.listSubcategoriasAll = async () => {
+  return await dao.listSubcategoriasAll();
+};
+
+exports.listMaterialesAll = async () => {
+  return await dao.listMaterialesAll();
+};

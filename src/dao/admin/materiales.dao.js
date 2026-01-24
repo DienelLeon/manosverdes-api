@@ -82,3 +82,13 @@ exports.materialInfoUpsert = async (material_id, info) => {
   ]);
   return true;
 };
+
+exports.listSubcategoriasAll = async () => {
+  const [r] = await db.query("CALL sp_admin_material_subcategoria_all()");
+  return r[0];
+};
+
+exports.listMaterialesAll = async () => {
+  const [r] = await db.query("CALL sp_admin_material_all()");
+  return r[0];
+};

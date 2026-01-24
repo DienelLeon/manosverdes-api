@@ -5,6 +5,7 @@ const router = Router();
 router.get('/', (_req, res) => res.json({ message: '🌱 API Manos Verdes' }));
 
 router.use('/auth', require('./auth.routes'));
+router.use("/usuarios", require("./usuarios.routes"));
 
 // Admin
 router.use('/admin/ubigeo', require('./admin/ubigeo.routes'));

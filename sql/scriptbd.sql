@@ -12,7 +12,7 @@ CREATE TABLE rol (
   id TINYINT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
   clave VARCHAR(20) NOT NULL UNIQUE,
   nombre VARCHAR(60) NOT NULL,
-  descripcion VARCHAR(255),
+  description VARCHAR(255),
   creado_en DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP
 ) ENGINE=InnoDB;
 
@@ -89,7 +89,7 @@ CREATE TABLE usuario_auth (
 CREATE TABLE codigo_otp (
   id BIGINT AUTO_INCREMENT PRIMARY KEY,
   usuario_id INT NOT NULL,
-  tipo ENUM('email_verificacion','password_reset') NOT NULL,
+  tipo ENUM('email_verification','password_reset') NOT NULL,
   codigo_hash CHAR(64) NOT NULL,
   expira_en DATETIME NOT NULL,
   usado TINYINT NOT NULL DEFAULT 0,
@@ -100,7 +100,7 @@ CREATE TABLE codigo_otp (
 ) ENGINE=InnoDB;
 
 -- =========================
--- MATERIALES
+-- MATERIALS
 -- =========================
 CREATE TABLE material_categoria (
   id INT AUTO_INCREMENT PRIMARY KEY,
@@ -123,7 +123,7 @@ CREATE TABLE material (
   subcategoria_id INT NOT NULL,
   nombre VARCHAR(120) NOT NULL,
   icono VARCHAR(1000),
-  elegible TINYINT NOT NULL DEFAULT 1,
+  eligible TINYINT NOT NULL DEFAULT 1,
   activo TINYINT NOT NULL DEFAULT 1,
   UNIQUE KEY uq_material (subcategoria_id,nombre),
   FOREIGN KEY (subcategoria_id) REFERENCES material_subcategoria(id)

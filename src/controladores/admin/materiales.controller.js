@@ -88,3 +88,15 @@ exports.materialInfoUpsert = async (req, res, next) => {
     res.json({ ok:true, ...out });
   } catch(e){ next(e); }
 };
+
+exports.listSubcategoriasAll = async (_req, res, next) => {
+  try {
+    res.json({ ok: true, items: await s.listSubcategoriasAll() });
+  } catch (e) { next(e); }
+};
+
+exports.listMaterialesAll = async (_req, res, next) => {
+  try {
+    res.json({ ok: true, items: await s.listMaterialesAll() });
+  } catch (e) { next(e); }
+};
