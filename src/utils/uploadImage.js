@@ -1,17 +1,16 @@
-// src/utils/uploadImage.js
 const multer = require('multer');
 
-const fileFilter = (_req, file, cb) => {
-  if (/^image\/(jpe?g|png|webp)$/i.test(file.mimetype)) {
-    return cb(null, true);
-  }
-  cb(new Error("Archivo no permitido (solo JPG, PNG o WEBP)"));
-};
+const storage = multer.memoryStorage();
 
-const upload = multer({
-  storage: multer.memoryStorage(),
+const uploadImage = multer({
+  storage,
   limits: { fileSize: 5 * 1024 * 1024 }, // 5MB
-  fileFilter
+  fileFilter: (_req, file, cb) => {
+    if (!file.mimetype.startsWith('image/')) {
+      return cb(new Error('Solo se permiten imágenes'));
+    }
+    cb(null, true);
+  },
 });
 
-module.exports = upload;
+module.exports = uploadImage;
