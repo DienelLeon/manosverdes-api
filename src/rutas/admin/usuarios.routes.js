@@ -14,5 +14,6 @@ r.post('/', c.crear);
 r.put('/:id', c.actualizar);
 
 r.patch('/:id/estado', c.cambiarEstado);
+r.get('/usuarios/centros', c.centrosSearch);
 
 module.exports = r;

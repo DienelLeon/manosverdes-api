@@ -75,6 +75,11 @@ async function otpUsarSiValido(usuario_id, tipo, codigo_hash) {
   return Number(row?.affected || 0) === 1;
 }
 
+async function obtenerUsuarioPorId(usuario_id) {
+  const r = await db.query('CALL sp_auth_usuario_obtener_por_id(?)', [usuario_id]);
+  return pickFirstRow(r);
+}
+
 module.exports = {
   obtenerUsuarioPorEmail,
   crearUsuario,
@@ -84,4 +89,5 @@ module.exports = {
   intentoFallido,
   otpUpsert,
   otpUsarSiValido,
+  obtenerUsuarioPorId,
 };

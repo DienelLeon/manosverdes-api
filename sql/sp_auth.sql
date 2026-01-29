@@ -177,3 +177,27 @@ BEGIN
   SELECT ROW_COUNT() AS affected;
 END$$
 DELIMITER ;
+
+
+DROP PROCEDURE IF EXISTS sp_usuario_obtener_por_id;
+DELIMITER $$
+CREATE PROCEDURE sp_usuario_obtener_por_id(IN p_id INT)
+BEGIN
+  SELECT 
+    u.idusuario,
+    u.nombre,
+    u.apellido,
+    u.email,
+    u.numero,
+    u.fecha_nac,
+    u.avatar_url,
+    u.estado,
+    u.role_id,
+    r.clave AS rol,
+    u.creado_en
+  FROM usuarios u
+  JOIN roles r ON r.idrol = u.role_id
+  WHERE u.idusuario = p_id
+  LIMIT 1;
+END$$
+DELIMITER ;

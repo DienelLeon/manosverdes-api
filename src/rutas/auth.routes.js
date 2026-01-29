@@ -15,4 +15,6 @@ r.post('/password/reset', c.passwordReset);
 r.post('/login', c.login);
 r.post('/logout', auth, c.logout);
 
+r.get('/me', auth, c.me);
+
 module.exports = r;

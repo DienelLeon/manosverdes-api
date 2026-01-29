@@ -181,6 +181,26 @@ async function logout() {
   return { message: 'Sesión cerrada' };
 }
 
+async function me(usuario_id) {
+  const u = await authDao.obtenerUsuarioPorId(usuario_id);
+  if (!u) throw new HttpError(404, 'Usuario no encontrado');
+
+  return {
+    usuario: {
+      id: u.id,
+      nombre: u.nombre,
+      apellido_paterno: u.apellido_paterno,
+      apellido_materno: u.apellido_materno,
+      email: u.email,
+      telefono: u.telefono,
+      avatar_key: u.avatar_key,
+      estado: u.estado,
+      rol: u.rol_clave,
+      creado_en: u.creado_en,
+    },
+  };
+}
+ 
 module.exports = {
   register,
   verifySendEmail,
@@ -189,4 +209,5 @@ module.exports = {
   passwordReset,
   login,
   logout,
+  me,
 };

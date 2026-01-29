@@ -16,10 +16,6 @@ CREATE TABLE rol (
   creado_en DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP
 ) ENGINE=InnoDB;
 
-INSERT INTO rol (clave, nombre) VALUES
-('admin','Administrador'),
-('centro','Centro'),
-('app','Usuario');
 
 -- =========================
 -- GEO PERÚ
@@ -93,6 +89,7 @@ CREATE TABLE codigo_otp (
   codigo_hash CHAR(64) NOT NULL,
   expira_en DATETIME NOT NULL,
   usado TINYINT NOT NULL DEFAULT 0,
+  usado_en DATETIME NULL,
   creado_en DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
   UNIQUE KEY uq_otp_usuario_tipo (usuario_id, tipo),
   FOREIGN KEY (usuario_id) REFERENCES usuario(id)
@@ -137,12 +134,6 @@ CREATE TABLE centro_tipo (
   nombre VARCHAR(80) NOT NULL UNIQUE
 ) ENGINE=InnoDB;
 
-INSERT INTO centro_tipo (nombre) VALUES
-('Centro de acopio'),
-('Recicladora industrial'),
-('Municipal'),
-('Empresa privada'),
-('Asociación / ONG');
 
 CREATE TABLE centro (
   id INT AUTO_INCREMENT PRIMARY KEY,

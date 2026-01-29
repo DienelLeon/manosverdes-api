@@ -1,9 +1,10 @@
+// src/controladores/admin/usuarios.controller.js
 const HttpError = require('../../utils/httpError');
 const usuariosService = require('../../services/admin/usuarios.service');
 
 const isStr = (v) => typeof v === 'string' && v.trim().length > 0;
 
-exports.listar = async (req, res, next) => {
+async function listar(req, res, next) {
   try {
     const limit = Math.min(Number(req.query.limit || 20), 100);
     const offset = Math.max(Number(req.query.offset || 0), 0);
@@ -14,12 +15,13 @@ exports.listar = async (req, res, next) => {
   } catch (e) {
     next(e);
   }
-};
+}
 
-exports.obtener = async (req, res, next) => {
+async function obtener(req, res, next) {
   try {
     const id = Number(req.params.id);
     if (!id || id <= 0) throw new HttpError(400, 'ID inválido');
+
     const withAvatar = String(req.query.with_avatar_url || '0') === '1';
 
     const out = await usuariosService.obtener(id, { withAvatar });
@@ -27,11 +29,12 @@ exports.obtener = async (req, res, next) => {
   } catch (e) {
     next(e);
   }
-};
+}
 
-exports.crear = async (req, res, next) => {
+async function crear(req, res, next) {
   try {
     const b = req.body || {};
+
     if (!isStr(b.nombre) || !isStr(b.apellido_paterno) || !isStr(b.email)) {
       throw new HttpError(400, 'Faltan campos obligatorios');
     }
@@ -45,7 +48,7 @@ exports.crear = async (req, res, next) => {
       fecha_nacimiento: b.fecha_nacimiento ?? null,
       rol_clave: b.rol_clave ?? 'app',
       estado: b.estado ?? 'activo',
-      // si quieres permitir crear con password desde admin (opcional)
+      // opcional: crear con password desde admin
       password: b.password ?? null,
       email_verificado: b.email_verificado ?? 1,
     });
@@ -54,14 +57,15 @@ exports.crear = async (req, res, next) => {
   } catch (e) {
     next(e);
   }
-};
+}
 
-exports.actualizar = async (req, res, next) => {
+async function actualizar(req, res, next) {
   try {
     const id = Number(req.params.id);
     if (!id || id <= 0) throw new HttpError(400, 'ID inválido');
 
     const b = req.body || {};
+
     const out = await usuariosService.actualizar(id, {
       nombre: b.nombre,
       apellido_paterno: b.apellido_paterno,
@@ -76,9 +80,9 @@ exports.actualizar = async (req, res, next) => {
   } catch (e) {
     next(e);
   }
-};
+}
 
-exports.cambiarEstado = async (req, res, next) => {
+async function cambiarEstado(req, res, next) {
   try {
     const id = Number(req.params.id);
     if (!id || id <= 0) throw new HttpError(400, 'ID inválido');
@@ -93,4 +97,23 @@ exports.cambiarEstado = async (req, res, next) => {
   } catch (e) {
     next(e);
   }
+}
+async function centrosSearch(req, res, next) {
+  try {
+    const q = req.query.q ?? '';
+    const limit = req.query.limit ?? 20;
+
+    const out = await usuariosService.centrosSearch({ q, limit });
+    res.json({ ok: true, ...out });
+  } catch (e) {
+    next(e);
+  }
+}
+module.exports = {
+  listar,
+  obtener,
+  crear,
+  actualizar,
+  cambiarEstado,
+  centrosSearch,
 };

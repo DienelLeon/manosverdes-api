@@ -1,5 +1,5 @@
 const HttpError = require('../../utils/httpError');
-const s = require('../../services/ubigeo.service');
+const s = require('../../services/admin/ubigeo.service');
 
 const isStr = (v) => typeof v === 'string' && v.trim().length > 0;
 
