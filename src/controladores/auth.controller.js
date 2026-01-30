@@ -71,12 +71,16 @@ async function logout(req, res, next) {
 
 async function me(req, res, next) {
   try {
-    const out = await authService.me(req.user.id);
+    const usuario_id = req.user?.id;
+    if (!usuario_id) throw new HttpError(401, "Token inválido");
+
+    const out = await authService.me(usuario_id);
     res.json({ ok: true, ...out });
   } catch (e) {
     next(e);
   }
 }
+
 
 module.exports = {
   register,

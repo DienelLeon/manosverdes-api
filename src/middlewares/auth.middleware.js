@@ -1,27 +1,21 @@
 // src/middlewares/auth.middleware.js
-const HttpError = require('../utils/httpError');
-const jwtUtil = require('../utils/jwt');
+const HttpError = require("../utils/httpError");
+const { verifyToken } = require("../utils/jwt");
 
-module.exports = function auth(req, _res, next) {
+module.exports = (req, _res, next) => {
   try {
-    const authH = req.headers.authorization || '';
-    const m = authH.match(/^Bearer\s+(.+)$/i);
-    if (!m) return next(new HttpError(401, 'Token requerido'));
+    const header = req.headers.authorization || req.headers.Authorization || "";
+    const [type, token] = String(header).split(" ");
 
-    const token = m[1].trim();
-    const payload = jwtUtil.verifyToken(token);
+    if (type !== "Bearer" || !token) throw new HttpError(401, "Token requerido");
 
-    const id = Number(payload.id);
-    if (!id) return next(new HttpError(401, 'Token sin id'));
+    const payload = verifyToken(token);
 
-    req.user = {
-      id,
-      rol: payload.rol ?? null,
-    };
-    req.token = token;
+    if (payload && payload.rol && !payload.role) payload.role = payload.rol;
 
-    next();
+    req.user = payload;
+    return next();
   } catch (e) {
-    next(new HttpError(401, 'Token inválido o expirado'));
+    return next(new HttpError(401, "Token inválido o expirado"));
   }
 };

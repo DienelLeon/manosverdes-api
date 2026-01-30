@@ -183,7 +183,7 @@ async function logout() {
 
 async function me(usuario_id) {
   const u = await authDao.obtenerUsuarioPorId(usuario_id);
-  if (!u) throw new HttpError(404, 'Usuario no encontrado');
+  if (!u) throw new HttpError(404, "Usuario no encontrado");
 
   return {
     usuario: {
@@ -200,6 +200,8 @@ async function me(usuario_id) {
     },
   };
 }
+
+
  
 module.exports = {
   register,

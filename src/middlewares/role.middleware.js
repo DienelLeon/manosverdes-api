@@ -1,3 +1,4 @@
+// src/middlewares/role.middleware.js
 const HttpError = require('../utils/httpError');
 
 module.exports = (...allowed) => (req, _res, next) => {

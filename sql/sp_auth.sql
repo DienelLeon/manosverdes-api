@@ -201,3 +201,21 @@ BEGIN
   LIMIT 1;
 END$$
 DELIMITER ;
+
+DROP PROCEDURE IF EXISTS sp_auth_usuario_obtener_por_id;
+DELIMITER $$
+CREATE PROCEDURE sp_auth_usuario_obtener_por_id(IN p_id INT)
+BEGIN
+  SELECT
+    u.id, u.nombre, u.apellido_paterno, u.apellido_materno,
+    u.email, u.telefono, u.fecha_nacimiento, u.avatar_key,
+    u.estado, u.creado_en, u.actualizado_en,
+    r.clave AS rol_clave,
+    ua.email_verificado, ua.email_verificado_en
+  FROM usuario u
+  JOIN rol r ON r.id = u.rol_id
+  LEFT JOIN usuario_auth ua ON ua.usuario_id = u.id
+  WHERE u.id = p_id
+  LIMIT 1;
+END$$
+DELIMITER ;

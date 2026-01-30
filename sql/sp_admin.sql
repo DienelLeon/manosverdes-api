@@ -187,11 +187,16 @@ USE manosverdes;
 
 DROP PROCEDURE IF EXISTS sp_admin_usuario_centro_search;
 DELIMITER $$
+
 CREATE PROCEDURE sp_admin_usuario_centro_search(
   IN p_q VARCHAR(180),
   IN p_limit INT
 )
 BEGIN
+  DECLARE v_limit INT DEFAULT 20;
+
+  SET v_limit = IFNULL(p_limit, 20);
+
   SELECT
     u.id,
     u.email,
@@ -209,11 +214,11 @@ BEGIN
       u.email LIKE CONCAT('%', TRIM(p_q), '%')
     )
   ORDER BY u.id DESC
-  LIMIT IFNULL(p_limit, 20);
+  LIMIT v_limit;
 END$$
+
 DELIMITER ;
- 
---- CRUD PARA ADMINISTRAR UBIGEO ---
+
 USE manosverdes;
 
 -- =========================

@@ -1,29 +1,44 @@
 // src/utils/mailer.js
-const nodemailer = require('nodemailer');
+const nodemailer = require("nodemailer");
 
-const { SMTP_HOST, SMTP_PORT, SMTP_USER, SMTP_PASS, MAIL_FROM, NODE_ENV } = process.env;
+const {
+  SMTP_HOST,
+  SMTP_PORT,
+  SMTP_USER,
+  SMTP_PASS,
+  MAIL_FROM,
+  SMTP_INSECURE,
+} = process.env;
+
+const port = Number(SMTP_PORT || 587);
+const insecure = String(SMTP_INSECURE || "0") === "1";
 
 const transporter = nodemailer.createTransport({
   host: SMTP_HOST,
-  port: Number(SMTP_PORT || 587),
-  secure: Number(SMTP_PORT) === 465,
+  port,
+  secure: port === 465,
   auth: { user: SMTP_USER, pass: SMTP_PASS },
-  tls: NODE_ENV !== 'production' ? { rejectUnauthorized: false } : undefined,
-  logger: NODE_ENV !== 'production',
-  debug: NODE_ENV !== 'production',
+  requireTLS: port !== 465,
+  tls: {
+    servername: SMTP_HOST,
+    minVersion: "TLSv1.2",
+    ...(insecure ? { rejectUnauthorized: false } : {}),
+  },
 });
 
 async function verifySmtp() {
   try {
     await transporter.verify();
-    console.log('✅ SMTP listo para enviar');
+    console.log("✅ SMTP listo para enviar");
+    return true;
   } catch (err) {
-    console.error('❌ SMTP verify falló:', err.message);
+    console.error("❌ SMTP verify falló:", err.message);
+    return false;
   }
 }
 
 async function sendMail({ to, subject, text, html }) {
-  const from = MAIL_FROM || 'Manos Verdes <noreply@manosverdes.online>';
+  const from = MAIL_FROM || "Manos Verdes <noreply@manosverdes.online>";
   return transporter.sendMail({ from, to, subject, text, html });
 }
 
@@ -51,4 +66,9 @@ function resetEmailTemplate({ nombre, code, minutes = 30 }) {
   return { text, html };
 }
 
-module.exports = { sendMail, verifySmtp, verificationEmailTemplate, resetEmailTemplate };
+module.exports = {
+  sendMail,
+  verifySmtp,
+  verificationEmailTemplate,
+  resetEmailTemplate,
+};
