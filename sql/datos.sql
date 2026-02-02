@@ -1,22 +1,39 @@
 USE manosverdes;
 
-INSERT INTO rol (clave, nombre) VALUES
+INSERT IGNORE INTO rol (clave, nombre) VALUES
 ('admin','Administrador'),
 ('centro','Centro'),
 ('app','Usuario');
 
-INSERT INTO centro_tipo (nombre) VALUES
-('Centro de acopio'),
-('Recicladora industrial'),
-('Municipal'),
-('Empresa privada'),
-('Asociación / ONG');
+INSERT IGNORE INTO usuario (nombre, apellido_paterno, apellido_materno, email, telefono, fecha_nacimiento, avatar_key, estado, rol_id)
+VALUES ('Admin', 'Manos', 'Verdes', 'admin@manosverdes.online', NULL, NULL, NULL, 'activo',
+        (SELECT id FROM rol WHERE clave='admin' LIMIT 1));
 
-INSERT INTO departamento (nombre) VALUES ('Lima');
+INSERT IGNORE INTO usuario_auth (usuario_id, password_hash, email_verificado, email_verificado_en)
+VALUES (
+  (SELECT id FROM usuario WHERE email='admin@manosverdes.online' LIMIT 1),
+  '$2a$12$8rnltzOABUcpHIs3ExoaI.8fr.//h6n18N6H/St/M4f7kh02ZbaNm',
+  1,
+  NOW()
+);
 
-INSERT INTO provincia (departamento_id, nombre) VALUES (1, 'Lima');
+-- Insertar padre en master_table: Tipo de Centro (id=100, ordering=0)
+INSERT IGNORE INTO master_table (id_master_table, id_master_table_parent, value, description, name, ordering, user_now, state) VALUES
+(100, NULL, 'TIPO_CENTRO', 'Clasificación de tipos de centros de acopio', 'Tipo de Centro', 0, 1, 'activo');
 
-INSERT INTO distrito (provincia_id, nombre) VALUES
+-- Insertar hijos en master_table: Tipos de centro específicos (id=101-105, parent=100, ordering=1-5)
+INSERT IGNORE INTO master_table (id_master_table, id_master_table_parent, value, description, name, ordering, user_now, state) VALUES
+(101, 100, 'CENTRO_ACOPIO', 'Centro de acopio de materiales reciclables', 'Centro de acopio', 1, 1, 'activo'),
+(102, 100, 'RECICLADORA_INDUSTRIAL', 'Recicladora industrial', 'Recicladora industrial', 2, 1, 'activo'),
+(103, 100, 'MUNICIPAL', 'Centro municipal de reciclaje', 'Municipal', 3, 1, 'activo'),
+(104, 100, 'EMPRESA_PRIVADA', 'Empresa privada de reciclaje', 'Empresa privada', 4, 1, 'activo'),
+(105, 100, 'ASOCIACION_ONG', 'Asociación u Organización No Gubernamental', 'Asociación / ONG', 5, 1, 'activo');
+
+INSERT IGNORE INTO departamento (nombre) VALUES ('Lima');
+
+INSERT IGNORE INTO provincia (departamento_id, nombre) VALUES (1, 'Lima');
+
+INSERT IGNORE INTO distrito (provincia_id, nombre) VALUES
 (1,'Ancón'),
 (1,'Ate'),
 (1,'Barranco'),
@@ -60,18 +77,6 @@ INSERT INTO distrito (provincia_id, nombre) VALUES
 (1,'Surquillo'),
 (1,'Villa El Salvador'),
 (1,'Villa María del Triunfo');
-
-INSERT INTO usuario (nombre, apellido_paterno, apellido_materno, email, telefono, fecha_nacimiento, avatar_key, estado, rol_id)
-VALUES ('Admin', 'Manos', 'Verdes', 'admin@manosverdes.online', NULL, NULL, NULL, 'activo',
-        (SELECT id FROM rol WHERE clave='admin' LIMIT 1));
-
-INSERT INTO usuario_auth (usuario_id, password_hash, email_verificado, email_verificado_en)
-VALUES (
-  (SELECT id FROM usuario WHERE email='admin@manosverdes.online' LIMIT 1),
-  '$2a$12$8rnltzOABUcpHIs3ExoaI.8fr.//h6n18N6H/St/M4f7kh02ZbaNm',
-  1,
-  NOW()
-);
 
 
 
