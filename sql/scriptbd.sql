@@ -64,6 +64,32 @@ CREATE TABLE usuario (
 ) ENGINE=InnoDB;
 
 -- =========================
+-- TABLA MAESTRA (Catálogos)
+-- =========================
+CREATE TABLE master_table (
+  id_master_table INT AUTO_INCREMENT PRIMARY KEY,
+  id_master_table_parent INT NULL,
+  value VARCHAR(120) NULL,
+  description VARCHAR(255),
+  name VARCHAR(120) NOT NULL,
+  ordering TINYINT UNSIGNED NOT NULL DEFAULT 0,
+  add_additional_one VARCHAR(255),
+  add_additional_two VARCHAR(255),
+  add_additional_three VARCHAR(255),
+  user_now INT NOT NULL,
+  date_now DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  user_edit INT NULL,
+  date_edit DATETIME NULL,
+  state ENUM('activo','inactivo') NOT NULL DEFAULT 'activo',
+  FOREIGN KEY (id_master_table_parent) REFERENCES master_table(id_master_table),
+  FOREIGN KEY (user_now) REFERENCES usuario(id),
+  FOREIGN KEY (user_edit) REFERENCES usuario(id),
+  INDEX idx_parent (id_master_table_parent),
+  INDEX idx_state (state),
+  INDEX idx_name (name)
+) ENGINE=InnoDB;
+
+-- =========================
 -- AUTH
 -- =========================
 CREATE TABLE usuario_auth (
@@ -129,27 +155,20 @@ CREATE TABLE material (
 -- =========================
 -- CENTRO
 -- =========================
-CREATE TABLE centro_tipo (
-  id INT AUTO_INCREMENT PRIMARY KEY,
-  nombre VARCHAR(80) NOT NULL UNIQUE
-) ENGINE=InnoDB;
-
-
 CREATE TABLE centro (
   id INT AUTO_INCREMENT PRIMARY KEY,
   usuario_id INT NOT NULL UNIQUE,
   nombre VARCHAR(150) NOT NULL,
   direccion VARCHAR(255),
   distrito_id INT NOT NULL,
-  tipo_id INT,
+  tipo_id VARCHAR(120),
   telefono VARCHAR(32),
   horario VARCHAR(255),
   lat DECIMAL(10,6),
   lng DECIMAL(10,6),
   estado ENUM('activo','inactivo') NOT NULL DEFAULT 'activo',
   FOREIGN KEY (usuario_id) REFERENCES usuario(id),
-  FOREIGN KEY (distrito_id) REFERENCES distrito(id),
-  FOREIGN KEY (tipo_id) REFERENCES centro_tipo(id)
+  FOREIGN KEY (distrito_id) REFERENCES distrito(id)
 ) ENGINE=InnoDB;
 
 CREATE TABLE centro_representante (
