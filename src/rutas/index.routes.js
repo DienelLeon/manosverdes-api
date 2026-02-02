@@ -14,5 +14,6 @@ router.use('/admin/materiales', require('./admin/materiales.routes'));
 router.use('/admin/upload', require('./admin/upload.routes'));
 router.use('/admin/usuarios', require('./admin/usuarios.routes'));
 router.use('/admin/centros', require('./admin/centros.routes'));
+router.use('/admin/master-table', require('./admin/master.routes'));
 
 module.exports = router;
