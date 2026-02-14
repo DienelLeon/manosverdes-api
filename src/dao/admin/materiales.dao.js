@@ -82,3 +82,7 @@ exports.materialInfoUpsert = async (material_id, info) => {
   ]);
   return true;
 };
+
+/* MASTER TABLE */
+exports.materialesMaster = async () =>
+  pickTable(await db.query('CALL sp_admin_materiales_master()'));

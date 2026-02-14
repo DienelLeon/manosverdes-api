@@ -121,3 +121,56 @@ exports.materialInfoUpsert = async (material_id, b) => {
   await dao.materialInfoUpsert(material_id, b || {});
   return { ok: true };
 };
+
+exports.materialesMaster = async () => {
+  const rows = await dao.materialesMaster();
+  
+  // Transform flat rows into hierarchical structure
+  const categorias = {};
+  
+  rows.forEach(row => {
+    const catId = row.categoria_id;
+    
+    // Initialize category if not exists
+    if (!categorias[catId]) {
+      categorias[catId] = {
+        id: row.categoria_id,
+        nombre: row.categoria_nombre,
+        icono: row.categoria_icono,
+        activo: row.categoria_activo,
+        subcategorias: {}
+      };
+    }
+    
+    // Add subcategory if exists
+    if (row.subcategoria_id) {
+      const subId = row.subcategoria_id;
+      
+      if (!categorias[catId].subcategorias[subId]) {
+        categorias[catId].subcategorias[subId] = {
+          id: row.subcategoria_id,
+          nombre: row.subcategoria_nombre,
+          activo: row.subcategoria_activo,
+          materiales: []
+        };
+      }
+      
+      // Add material if exists
+      if (row.material_id) {
+        categorias[catId].subcategorias[subId].materiales.push({
+          id: row.material_id,
+          nombre: row.material_nombre,
+          icono: row.material_icono,
+          elegible: row.material_elegible,
+          activo: row.material_activo
+        });
+      }
+    }
+  });
+  
+  // Convert to array format
+  return Object.values(categorias).map(cat => ({
+    ...cat,
+    subcategorias: Object.values(cat.subcategorias)
+  }));
+};
