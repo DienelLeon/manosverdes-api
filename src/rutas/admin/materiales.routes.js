@@ -7,6 +7,8 @@ const r = Router();
 
 r.use(auth, roleGuard('admin'));
 
+r.get('/master', c.materialesMaster);
+
 r.get('/categorias', c.categoriaList);
 r.get('/categorias/:id', c.categoriaGet);
 r.post('/categorias', c.categoriaCreate);

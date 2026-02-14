@@ -88,3 +88,7 @@ exports.materialInfoUpsert = async (req, res, next) => {
     res.json({ ok:true, ...out });
   } catch(e){ next(e); }
 };
+
+exports.materialesMaster = async (_req, res, next) => {
+  try { res.json({ ok:true, items: await s.materialesMaster() }); } catch(e){ next(e); }
+};
