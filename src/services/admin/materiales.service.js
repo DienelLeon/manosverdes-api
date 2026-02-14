@@ -125,15 +125,22 @@ exports.materialInfoUpsert = async (material_id, b) => {
 exports.materialesMaster = async () => {
   const rows = await dao.materialesMaster();
   
-  // Transform flat rows into hierarchical structure
-  const categorias = {};
+  // Helper function to create a material object
+  const createMaterial = (row) => ({
+    id: row.material_id,
+    nombre: row.material_nombre,
+    icono: row.material_icono,
+    elegible: row.material_elegible,
+    activo: row.material_activo
+  });
   
-  rows.forEach(row => {
+  // Transform flat rows into hierarchical structure using reduce
+  const categorias = rows.reduce((acc, row) => {
     const catId = row.categoria_id;
     
     // Initialize category if not exists
-    if (!categorias[catId]) {
-      categorias[catId] = {
+    if (!acc[catId]) {
+      acc[catId] = {
         id: row.categoria_id,
         nombre: row.categoria_nombre,
         icono: row.categoria_icono,
@@ -146,8 +153,8 @@ exports.materialesMaster = async () => {
     if (row.subcategoria_id) {
       const subId = row.subcategoria_id;
       
-      if (!categorias[catId].subcategorias[subId]) {
-        categorias[catId].subcategorias[subId] = {
+      if (!acc[catId].subcategorias[subId]) {
+        acc[catId].subcategorias[subId] = {
           id: row.subcategoria_id,
           nombre: row.subcategoria_nombre,
           activo: row.subcategoria_activo,
@@ -157,16 +164,12 @@ exports.materialesMaster = async () => {
       
       // Add material if exists
       if (row.material_id) {
-        categorias[catId].subcategorias[subId].materiales.push({
-          id: row.material_id,
-          nombre: row.material_nombre,
-          icono: row.material_icono,
-          elegible: row.material_elegible,
-          activo: row.material_activo
-        });
+        acc[catId].subcategorias[subId].materiales.push(createMaterial(row));
       }
     }
-  });
+    
+    return acc;
+  }, {});
   
   // Convert to array format
   return Object.values(categorias).map(cat => ({
