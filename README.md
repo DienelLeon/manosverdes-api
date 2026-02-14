@@ -3,6 +3,10 @@
 Backend REST para Manos Verdes (Node.js + Express + MySQL).  
 Incluye autenticación JWT (whitelist con tabla `sesion`), envío de OTP por correo y subida de archivos a Google Cloud Storage.
 
+## Documentación API
+
+Para ejemplos de comandos curl y uso de la API, consulta [CURL_EXAMPLES.md](./CURL_EXAMPLES.md).
+
 ## Tecnologías
 - Node.js + Express
 - MySQL (mysql2)
